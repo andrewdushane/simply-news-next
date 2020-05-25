@@ -19,7 +19,6 @@ export default function Home({ feed }) {
           ))}
         </>
       ))}
-      <pre>{JSON.stringify(feed, null, 2)}</pre>
     </div>
   );
 }
