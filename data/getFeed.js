@@ -1,4 +1,3 @@
-import feedRead from "feed-read";
 import Parser from "rss-parser";
 import feed from "./feed.json";
 
