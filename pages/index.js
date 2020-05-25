@@ -118,16 +118,16 @@ const Article = styled.article`
 
 const ArticleTitle = styled.a`
   display: block;
-  color: steelblue;
+  color: skyblue;
   font-size: 1rem;
   margin-top: 0;
   text-decoration: none;
   &:visited {
-    color: steelblue;
+    color: skyblue;
     text-decoration: none;
   }
   &:active {
-    color: steelblue;
+    color: skyblue;
     text-decoration: none;
   }
 `;
