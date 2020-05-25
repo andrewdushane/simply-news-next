@@ -1,5 +1,6 @@
 import Head from "next/head";
 import styled from "styled-components";
+import { ServerStyleSheet } from "styled-components";
 import { getFeed } from "../data/getFeed";
 
 const CONTENT_MAX_LENGTH = 250;
@@ -8,7 +9,9 @@ const scrubText = (text) =>
   text ? text.trim().replace(/(<\/?[^>]+(>|$))|(&(.*?);)/g, "") : "";
 
 const truncate = (text) =>
-  text.length > CONTENT_MAX_LENGTH ? `${text.substring(0, CONTENT_MAX_LENGTH)}...` : text;
+  text.length > CONTENT_MAX_LENGTH
+    ? `${text.substring(0, CONTENT_MAX_LENGTH)}...`
+    : text;
 
 const verifyContent = (content) =>
   content && content !== "Comments" ? content : "";
@@ -16,12 +19,13 @@ const verifyContent = (content) =>
 const sortFeed = (feed) =>
   Object.values(feed).sort((a, b) => a.name.localeCompare(b.name));
 
-export default function Home({ feed }) {
+const SimplyNews = ({ feed, styles }) => {
   return (
     <Container>
       <Head>
         <title>Simply News</title>
         <link rel="icon" href="/favicon.ico" />
+        {styles}
       </Head>
       <Bar>
         <Title>Simply News</Title>
@@ -29,8 +33,8 @@ export default function Home({ feed }) {
       <Content>
         {sortFeed(feed).map((source) => {
           return (
-            <section>
-              <SourceName key={source.id}>{source.name}</SourceName>
+            <section key={source.id}>
+              <SourceName>{source.name}</SourceName>
               {source.articles.map((article) => {
                 const content = verifyContent(
                   truncate(scrubText(article.content))
@@ -59,7 +63,9 @@ export default function Home({ feed }) {
       </Content>
     </Container>
   );
-}
+};
+
+export default SimplyNews;
 
 const Container = styled.main`
   background-color: black;
@@ -134,7 +140,8 @@ const ArticleContent = styled.p`
 
 export const getServerSideProps = async () => {
   const feed = await getFeed();
+  const sheet = new ServerStyleSheet();
   return {
-    props: { feed },
+    props: { feed, styles: sheet.getStyleTags() },
   };
 };
