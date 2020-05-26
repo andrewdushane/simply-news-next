@@ -82,7 +82,7 @@ const SimplyNews = ({ feed, styles }) => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        {article.title}
+                        {scrubText(article.title)}
                       </ArticleTitle>
                       {publishDate ? (
                         <>
