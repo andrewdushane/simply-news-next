@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import { ServerStyleSheet } from "styled-components";
@@ -10,6 +10,7 @@ import usePersistedState from "../hooks/usePersistedState";
 
 const CONTENT_MAX_LENGTH = 750;
 const COLLAPSED_QTY = 3;
+const REFRESH_INTERVAL = 60000;
 
 const scrubText = (text) =>
   text ? text.trim().replace(/(<\/?[^>]+(>|$))|(&(.*?);)/g, "") : "";
@@ -27,6 +28,20 @@ const sortFeed = (feed) =>
 
 const SimplyNews = ({ feed, styles }) => {
   const [expanded, setExpanded] = usePersistedState("simply_news_expanded", []);
+  const [currentFeed, setCurrentFeed] = useState(feed);
+  useEffect(() => {
+    window.setInterval(async () => {
+      try {
+        const newFeedResponse = await fetch("/api/feed");
+        const newFeed = await newFeedResponse.json();
+        if (newFeed && Object.values(newFeed).length) {
+          setCurrentFeed(newFeed);
+        }
+      } catch (e) {
+        // fail silently
+      }
+    }, REFRESH_INTERVAL);
+  }, []);
   const onToggle = (id) => {
     setExpanded((current) => {
       const isCurrentlyExpanded = current.includes(id);
@@ -50,7 +65,7 @@ const SimplyNews = ({ feed, styles }) => {
         <Title>Simply News</Title>
       </Bar>
       <Content>
-        {sortFeed(feed).map((source) => {
+        {sortFeed(currentFeed).map((source) => {
           const isExpanded = expanded.includes(source.id);
           return (
             <section key={source.id} id={`${source.id}`}>
@@ -167,7 +182,7 @@ const SourceName = styled.h2`
   color: #ddd;
   margin: 0;
   @media (prefers-color-scheme: light) {
-   color: #222;
+    color: #222;
   }
 `;
 
@@ -182,8 +197,8 @@ const Article = styled.article`
   word-wrap: break-word;
   @media (prefers-color-scheme: light) {
     &:not(:last-child) {
-    border-bottom: 1px solid #ddd;
-  }
+      border-bottom: 1px solid #ddd;
+    }
   }
 `;
 
