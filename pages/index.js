@@ -1,9 +1,12 @@
+import React, { useState } from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import { ServerStyleSheet } from "styled-components";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { getFeed } from "../data/getFeed";
 
 const CONTENT_MAX_LENGTH = 250;
+const COLLAPSED_QTY = 5;
 
 const scrubText = (text) =>
   text ? text.trim().replace(/(<\/?[^>]+(>|$))|(&(.*?);)/g, "") : "";
@@ -20,6 +23,19 @@ const sortFeed = (feed) =>
   Object.values(feed).sort((a, b) => a.name.localeCompare(b.name));
 
 const SimplyNews = ({ feed, styles }) => {
+  const [expanded, setExpanded] = useState([]);
+  const onToggle = (id) => {
+    setExpanded((current) => {
+      const isCurrentlyExpanded = current.includes(id);
+      if (isCurrentlyExpanded) {
+        document.getElementById(`${id}`).scrollIntoView();
+      }
+      return isCurrentlyExpanded
+        ? current.filter((item) => item !== id)
+        : [...current, id];
+    });
+  };
+
   return (
     <Container>
       <Head>
@@ -32,15 +48,30 @@ const SimplyNews = ({ feed, styles }) => {
       </Bar>
       <Content>
         {sortFeed(feed).map((source) => {
+          const isExpanded = expanded.includes(source.id);
+          const Toggle = isExpanded ? MdExpandLess : MdExpandMore;
           return (
-            <section key={source.id}>
-              <SourceName>{source.name}</SourceName>
-              {source.articles.map((article) => {
+            <section key={source.id} id={`${source.id}`}>
+              <SourceHeading>
+                {" "}
+                <SourceName>{source.name}</SourceName>
+                <Toggle
+                  onClick={() => onToggle(source.id)}
+                  style={{ width: 25, height: 25 }}
+                />
+              </SourceHeading>
+              {source.articles.map((article, index) => {
                 const content = verifyContent(
                   truncate(scrubText(article.content))
                 );
+                const isVisible = isExpanded || index < COLLAPSED_QTY;
                 return (
-                  <Article key={article.title + article.pubDate}>
+                  <Article
+                    key={article.title + article.pubDate}
+                    style={{
+                      display: isVisible ? "block" : "none",
+                    }}
+                  >
                     <ArticleTitle
                       title="View article"
                       href={article.link}
@@ -94,15 +125,24 @@ const Content = styled.div`
   padding: 0;
 `;
 
-const SourceName = styled.h2`
+const SourceHeading = styled.div`
   background-color: #222;
-  font-size: 1.2rem;
-  font-weight: 400;
   color: #ddd;
   margin: 0;
   padding: 10px 20px;
   position: sticky;
   top: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const SourceName = styled.h2`
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #ddd;
+  margin: 0;
 `;
 
 const Article = styled.article`
