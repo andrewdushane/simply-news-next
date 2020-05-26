@@ -5,8 +5,8 @@ import { ServerStyleSheet } from "styled-components";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { getFeed } from "../data/getFeed";
 
-const CONTENT_MAX_LENGTH = 250;
-const COLLAPSED_QTY = 5;
+const CONTENT_MAX_LENGTH = 750;
+const COLLAPSED_QTY = 3;
 
 const scrubText = (text) =>
   text ? text.trim().replace(/(<\/?[^>]+(>|$))|(&(.*?);)/g, "") : "";
@@ -53,7 +53,6 @@ const SimplyNews = ({ feed, styles }) => {
           return (
             <section key={source.id} id={`${source.id}`}>
               <SourceHeading>
-                {" "}
                 <SourceName>{source.name}</SourceName>
                 <Toggle
                   onClick={() => onToggle(source.id)}
@@ -82,7 +81,7 @@ const SimplyNews = ({ feed, styles }) => {
                     </ArticleTitle>
                     {content && (
                       <ArticleContent>
-                        {scrubText(article.content)}
+                        {content}
                       </ArticleContent>
                     )}
                   </Article>
