@@ -3,6 +3,8 @@ import Head from "next/head";
 import styled from "styled-components";
 import { ServerStyleSheet } from "styled-components";
 import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import { formatDistance } from "date-fns";
+
 import { getFeed } from "../data/getFeed";
 
 const CONTENT_MAX_LENGTH = 750;
@@ -35,7 +37,7 @@ const SimplyNews = ({ feed, styles }) => {
         : [...current, id];
     });
   };
-
+  const now = new Date();
   return (
     <Container>
       <Head>
@@ -64,6 +66,9 @@ const SimplyNews = ({ feed, styles }) => {
                   truncate(scrubText(article.content))
                 );
                 const isVisible = isExpanded || index < COLLAPSED_QTY;
+                const publishDate =
+                  article.pubDate && new Date(article.pubDate);
+                console.log(new Date(article.pubDate));
                 return (
                   <Article
                     key={article.title + article.pubDate}
@@ -79,11 +84,15 @@ const SimplyNews = ({ feed, styles }) => {
                     >
                       {article.title}
                     </ArticleTitle>
-                    {content && (
-                      <ArticleContent>
-                        {content}
-                      </ArticleContent>
-                    )}
+                    {publishDate ? (
+                      <>
+                        <ArticleDate>
+                          {" "}
+                          {formatDistance(now, publishDate)} ago
+                        </ArticleDate>
+                      </>
+                    ) : null}
+                    {content && <ArticleContent>{content}</ArticleContent>}
                   </Article>
                 );
               })}
@@ -156,10 +165,8 @@ const Article = styled.article`
 `;
 
 const ArticleTitle = styled.a`
-  display: block;
   color: skyblue;
   font-size: 1rem;
-  margin-top: 0;
   text-decoration: none;
   &:visited {
     color: skyblue;
@@ -169,6 +176,11 @@ const ArticleTitle = styled.a`
     color: skyblue;
     text-decoration: none;
   }
+`;
+
+const ArticleDate = styled.span`
+  color: #ddd;
+  font-size: 0.8rem;
 `;
 
 const ArticleContent = styled.p`
