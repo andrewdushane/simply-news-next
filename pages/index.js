@@ -117,6 +117,10 @@ const Container = styled.main`
   color: white;
   margin: 0;
   padding: 0;
+  @media (prefers-color-scheme: light) {
+    background-color: white;
+    color: black;
+  }
 `;
 
 const Bar = styled.header`
@@ -127,6 +131,7 @@ const Bar = styled.header`
   flex-flow: row;
   align-items: center;
   padding: 10px 20px;
+  color: white;
 `;
 
 const Title = styled.h1`
@@ -150,6 +155,10 @@ const SourceHeading = styled.div`
   flex-flow: row nowrap;
   justify-content: space-between;
   align-items: center;
+  @media (prefers-color-scheme: light) {
+    background-color: #ddd;
+    color: #222;
+  }
 `;
 
 const SourceName = styled.h2`
@@ -157,6 +166,9 @@ const SourceName = styled.h2`
   font-weight: 400;
   color: #ddd;
   margin: 0;
+  @media (prefers-color-scheme: light) {
+   color: #222;
+  }
 `;
 
 const Article = styled.article`
@@ -168,6 +180,11 @@ const Article = styled.article`
   max-width: 100%;
   overflow-wrap: break-word;
   word-wrap: break-word;
+  @media (prefers-color-scheme: light) {
+    &:not(:last-child) {
+    border-bottom: 1px solid #ddd;
+  }
+  }
 `;
 
 const ArticleTitleAndDate = styled.div`
@@ -186,6 +203,9 @@ const ArticleTitle = styled.a`
     color: skyblue;
     text-decoration: none;
   }
+  @media (prefers-color-scheme: light) {
+    color: steelblue;
+  }
 `;
 
 const ArticleDate = styled.span`
@@ -193,6 +213,9 @@ const ArticleDate = styled.span`
   font-size: 0.8rem;
   padding-left: 5px;
   line-height: 0.5em;
+  @media (prefers-color-scheme: light) {
+    color: #333;
+  }
 `;
 
 const ArticleContent = styled.p`
