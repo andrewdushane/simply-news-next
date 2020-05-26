@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Head from "next/head";
 import styled from "styled-components";
 import { ServerStyleSheet } from "styled-components";
-import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import { MdExpandLess } from "react-icons/md";
 import { formatDistance } from "date-fns";
 
 import { getFeed } from "../data/getFeed";
@@ -31,7 +31,7 @@ const SimplyNews = ({ feed, styles }) => {
     setExpanded((current) => {
       const isCurrentlyExpanded = current.includes(id);
       if (isCurrentlyExpanded) {
-        document.getElementById(`${id}`).scrollIntoView();
+        document.getElementById(`${id}`).scrollIntoView({ behavior: "smooth" });
       }
       return isCurrentlyExpanded
         ? current.filter((item) => item !== id)
@@ -52,14 +52,18 @@ const SimplyNews = ({ feed, styles }) => {
       <Content>
         {sortFeed(feed).map((source) => {
           const isExpanded = expanded.includes(source.id);
-          const Toggle = isExpanded ? MdExpandLess : MdExpandMore;
           return (
             <section key={source.id} id={`${source.id}`}>
               <SourceHeading>
                 <SourceName>{source.name}</SourceName>
-                <Toggle
+                <MdExpandLess
                   onClick={() => onToggle(source.id)}
-                  style={{ width: 25, height: 25 }}
+                  style={{
+                    width: 25,
+                    height: 25,
+                    transform: `rotate(${isExpanded ? "0" : "180"}deg)`,
+                    transition: "transform 250ms ease-in-out",
+                  }}
                 />
               </SourceHeading>
               {source.articles.map((article, index) => {
