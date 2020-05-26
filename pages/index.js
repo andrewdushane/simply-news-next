@@ -6,6 +6,7 @@ import { MdExpandLess, MdExpandMore } from "react-icons/md";
 import { formatDistance } from "date-fns";
 
 import { getFeed } from "../data/getFeed";
+import usePersistedState from "../hooks/usePersistedState";
 
 const CONTENT_MAX_LENGTH = 750;
 const COLLAPSED_QTY = 3;
@@ -25,7 +26,7 @@ const sortFeed = (feed) =>
   Object.values(feed).sort((a, b) => a.name.localeCompare(b.name));
 
 const SimplyNews = ({ feed, styles }) => {
-  const [expanded, setExpanded] = useState([]);
+  const [expanded, setExpanded] = usePersistedState("simply_news_expanded", []);
   const onToggle = (id) => {
     setExpanded((current) => {
       const isCurrentlyExpanded = current.includes(id);
@@ -184,7 +185,7 @@ const ArticleTitle = styled.a`
 `;
 
 const ArticleDate = styled.span`
-  color: #AAA;
+  color: #aaa;
   font-size: 0.8rem;
   padding-left: 5px;
   line-height: 0.5em;
