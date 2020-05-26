@@ -68,7 +68,6 @@ const SimplyNews = ({ feed, styles }) => {
                 const isVisible = isExpanded || index < COLLAPSED_QTY;
                 const publishDate =
                   article.pubDate && new Date(article.pubDate);
-                console.log(new Date(article.pubDate));
                 return (
                   <Article
                     key={article.title + article.pubDate}
@@ -76,22 +75,24 @@ const SimplyNews = ({ feed, styles }) => {
                       display: isVisible ? "block" : "none",
                     }}
                   >
-                    <ArticleTitle
-                      title="View article"
-                      href={article.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {article.title}
-                    </ArticleTitle>
-                    {publishDate ? (
-                      <>
-                        <ArticleDate>
-                          {" "}
-                          {formatDistance(now, publishDate)} ago
-                        </ArticleDate>
-                      </>
-                    ) : null}
+                    <ArticleTitleAndDate>
+                      <ArticleTitle
+                        title="View article"
+                        href={article.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {article.title}
+                      </ArticleTitle>
+                      {publishDate ? (
+                        <>
+                          <ArticleDate>
+                            {" "}
+                            {formatDistance(now, publishDate)} ago
+                          </ArticleDate>
+                        </>
+                      ) : null}
+                    </ArticleTitleAndDate>
                     {content && <ArticleContent>{content}</ArticleContent>}
                   </Article>
                 );
@@ -164,9 +165,13 @@ const Article = styled.article`
   word-wrap: break-word;
 `;
 
+const ArticleTitleAndDate = styled.div`
+  font-size: 1rem;
+  line-height: 1em;
+`;
+
 const ArticleTitle = styled.a`
   color: skyblue;
-  font-size: 1rem;
   text-decoration: none;
   &:visited {
     color: skyblue;
@@ -179,13 +184,15 @@ const ArticleTitle = styled.a`
 `;
 
 const ArticleDate = styled.span`
-  color: #ddd;
+  color: #AAA;
   font-size: 0.8rem;
+  padding-left: 5px;
+  line-height: 0.5em;
 `;
 
 const ArticleContent = styled.p`
   font-size: 0.8rem;
-  margin-top: 15px;
+  margin-top: 7px;
   margin-bottom: 0;
 `;
 
